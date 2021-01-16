@@ -20,6 +20,17 @@ app.get("/api/notes", function (req, res) {
     })
 })
 
+app.post("/api/notes", function (req, res) {
+    fs.readFile(__dirname + "/db/db.json", function (err, data) {
+        err ? console.error(err) : console.log("success")
+        var note = JSON.parse(data)
+        note.push(req.body)
+        fs.writeFile(__dirname + "/db/db.json", JSON.stringify(note), (err) => {
+            err ? console.error(err) : console.log("success")
+        })
+    })
+})
+
 app.listen(PORT, function () {
     console.log(`App listening on PORT: ${PORT}`)
 })
