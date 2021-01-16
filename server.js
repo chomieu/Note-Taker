@@ -13,7 +13,7 @@ app.get("/notes", (req, res) => {
     res.sendFile(path.join(__dirname + "/public/notes.html"))
 })
 
-app.get("/api/notes", function (req, res) {
+app.get("/api/notes", (req, res) => {
     fs.readFile("./db.json", (err, data) => {
         if (err) throw err
         const parsed = JSON.parse(data)
@@ -23,11 +23,11 @@ app.get("/api/notes", function (req, res) {
         fs.writeFile("./db.json", JSON.stringify(parsed), (err) => {
             if (err) throw err
         })
-        res.json(parsed)
+        return res.json(parsed)
     })
 })
 
-app.post("/api/notes", function (req, res) {
+app.post("/api/notes", (req, res) => {
     fs.readFile("./db.json", (err, data) => {
         if (err) throw err
         const parsed = JSON.parse(data)
@@ -42,7 +42,7 @@ app.post("/api/notes", function (req, res) {
     })
 })
 
-app.delete("/api/notes/:id", function (req, res) {
+app.delete("/api/notes/:id", (req, res) => {
     const chosen = parseInt(req.params.id) - 1
     fs.readFile("./db.json", (err, data) => {
         if (err) throw err
