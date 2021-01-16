@@ -9,28 +9,50 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(express.static("public"))
 
-app.get("/notes", function (req, res) {
+app.get("/notes", (req, res) => {
     res.sendFile(path.join(__dirname + "/public/notes.html"))
 })
 
 app.get("/api/notes", function (req, res) {
-    fs.readFile(__dirname + "db.json", function (err, data) {
-        err ? console.error(err) : console.log("success")
-        res.json(JSON.parse(data))
+    fs.readFile("./db.json", (err, data) => {
+        if (err) throw err
+        const parsed = JSON.parse(data)
+        for (i = 0; i < parsed.length; i++) {
+            parsed[i].id = i + 1
+        }
+        fs.writeFile("./db.json", JSON.stringify(parsed), (err) => {
+            if (err) throw err
+        })
+        res.json(parsed)
     })
 })
 
 app.post("/api/notes", function (req, res) {
-    fs.readFile(__dirname + "/db/db.json", function (err, data) {
-        err ? console.error(err) : console.log("success")
-        var note = JSON.parse(data)
-        note.push(req.body)
-        fs.writeFile(__dirname + "/db/db.json", JSON.stringify(note), (err) => {
-            err ? console.error(err) : console.log("success")
+    fs.readFile("./db.json", (err, data) => {
+        if (err) throw err
+        const parsed = JSON.parse(data)
+        parsed.push(req.body)
+        for (i = 0; i < parsed.length; i++) {
+            parsed[i].id = i + 1
+        }
+        fs.writeFile("./db.json", JSON.stringify(parsed), (err) => {
+            if (err) throw err
         })
+        return res.json(parsed)
     })
 })
 
-app.listen(PORT, function () {
-    console.log(`App listening on PORT: ${PORT}`)
+app.delete("/api/notes/:id", function (req, res) {
+    const chosen = parseInt(req.params.id) - 1
+    fs.readFile("./db.json", (err, data) => {
+        if (err) throw err
+        const parsed = JSON.parse(data)
+        parsed.splice(chosen, 1)
+        fs.writeFile("./db.json", JSON.stringify(parsed), (err) => {
+            if (err) throw err
+        })
+        return res.json(parsed)
+    })
 })
+
+app.listen(PORT)
