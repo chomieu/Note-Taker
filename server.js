@@ -13,46 +13,32 @@ app.get("/notes", (req, res) => {
     res.sendFile(path.join(__dirname + "/public/notes.html"))
 })
 
-app.get("/api/notes", (req, res) => {
-    fs.readFile("./db.json", (err, data) => {
-        if (err) throw err
-        const parsed = JSON.parse(data)
-        for (i = 0; i < parsed.length; i++) {
-            parsed[i].id = i + 1
-        }
-        fs.writeFile("./db.json", JSON.stringify(parsed), (err) => {
-            if (err) throw err
-        })
-        return res.json(parsed)
-    })
+app.all(`/api/notes(/:id)?`, (req, res) => {
+    handler(req, res)
 })
 
-app.post("/api/notes", (req, res) => {
-    fs.readFile("./db.json", (err, data) => {
-        if (err) throw err
-        const parsed = JSON.parse(data)
-        parsed.push(req.body)
-        for (i = 0; i < parsed.length; i++) {
-            parsed[i].id = i + 1
-        }
-        fs.writeFile("./db.json", JSON.stringify(parsed), (err) => {
-            if (err) throw err
-        })
-        return res.json(parsed)
-    })
-})
+// app.delete("/api/notes/:id", (req, res) => {
+//     handler(req, res)
+// })
 
-app.delete("/api/notes/:id", (req, res) => {
-    const chosen = parseInt(req.params.id) - 1
+function handler(req, res) {
     fs.readFile("./db.json", (err, data) => {
         if (err) throw err
         const parsed = JSON.parse(data)
-        parsed.splice(chosen, 1)
-        fs.writeFile("./db.json", JSON.stringify(parsed), (err) => {
-            if (err) throw err
-        })
-        return res.json(parsed)
+        switch (req.method) {
+            case "GET":
+                for (i = 0; i < parsed.length; i++) { parsed[i].id = i + 1 }
+                break
+            case "POST":
+                parsed.push(req.body)
+                break
+            case "DELETE":
+                parsed.splice(parseInt(req.params.id) - 1, 1)
+                break
+        }
+        fs.writeFile("./db.json", JSON.stringify(parsed), (err) => { if (err) throw err })
+        res.json(parsed)
     })
-})
+}
 
 app.listen(PORT)
