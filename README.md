@@ -5,21 +5,20 @@
 An online notes application that allows user to create, save, view, and delete custom notes. 
    
 ## Table of Contents
-* [Installation](#installation)
-* [Usage](#usage)
+* [Preview](#preview)
+* [Link](#link)
 * [License](#license)
 * [Questions](#questions)
-        
-## Installation
-1. Make sure you have Node.js installed ([download](https://nodejs.org/en/))
-2. Clone this repo into your directory
-```
-git clone git@github.com:chomieu/Note-Taker.git
-```
 
-## Usage
+## Preview
 [Preview Video](https://drive.google.com/file/d/1lCTEtZR53RHGTycQ0hcHhVSSOLtSjO1c/view)</br>
 ![Preview GIF](./preview.gif)
+
+## Link
+Live Site: <https://evening-chamber-05542.herokuapp.com>
+
+## Technologies
+Built with [Node.js](https://nodejs.org/en/), [Express.js](https://expressjs.com) backend and deployed on [Heroku](https://devcenter.heroku.com/).
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
